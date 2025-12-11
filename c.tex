@@ -1,0 +1,346 @@
+\documentclass[12pt, a4paper, spanish]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+
+
+
+%opening
+\title{Motor de Decisiones Automatizado para la Gestión de Subsidios en Colombia: Caso Renta Joven}
+\author{Cesar Amaya Gomez}
+\date{}
+
+\begin{document}
+\maketitle
+
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\tableofcontents
+
+
+\section{Introducción}
+
+En Colombia, los programas sociales dirigidos a jóvenes en condición de vulnerabilidad enfrentan una dificultad que trasciende lo administrativo y roza lo absurdo: la información requerida para validar requisitos se encuentra distribuida en múltiples sistemas, instituciones y bases de datos que no se comunican entre sí. El caso del programa \textit{Renta Joven} es un ejemplo evidente. Para determinar si una persona es beneficiaria se deben consultar fuentes como el SISBÉN, el SNIES, registros del Ministerio de Educación Nacional y datos de instituciones educativas, todas con procesos independientes y tiempos de respuesta variables. Esta fragmentación produce demoras que pueden extenderse durante semanas, incrementa la carga operativa y abre espacios para errores e inconsistencias.
+Frente a este panorama, la transformación digital no es una aspiración futurista, sino una necesidad inmediata. Sin embargo, el discurso tecnológico en el sector público suele polarizarse entre sistemas tradicionales lentos pero probados, y soluciones basadas en \textit{blockchain} que rara vez encuentran viabilidad técnica o institucional. Este trabajo propone una alternativa intermedia, práctica y aplicable dentro de la realidad tecnológica del Estado colombiano: un \textbf{motor de decisiones automatizado inspirado en los principios de los \textit{smart contracts}}, pero sin requerir \textit{blockchain}, infraestructura en la nube ni componentes complejos difíciles de adoptar.
+El propósito es demostrar que la verificación de requisitos para \textit{Renta Joven} puede realizarse de manera automática, determinística, transparente y auditable en cuestión de segundos. Para ello, se desarrolló un prototipo local que simula las fuentes de datos externas y aplica reglas de negocio reales mediante un motor de decisiones centralizado y trazable. La arquitectura diseñada prioriza la separación de responsabilidades, la claridad del flujo, la auditoría de cada paso y la medición de atributos de calidad como precisión, latencia y consistencia.
+Este artículo presenta el marco conceptual, la arquitectura propuesta, el diseño del prototipo, la metodología de evaluación y los resultados obtenidos. Más que ofrecer una solución definitiva, este trabajo busca constituirse en una guía replicable para otros programas sociales, demostrando que es posible modernizar y automatizar los procesos de asignación de subsidios utilizando tecnologías accesibles y compatibles con la infraestructura institucional existente.
+
+
+\section{Objetivos del Proyecto}
+
+\subsection*{Objetivo General}
+
+Diseñar y desarrollar un prototipo local de un \textbf{motor de decisiones automatizado} para la verificación de requisitos del programa \textit{Renta Joven}, capaz de integrar información simulada de entidades externas, aplicar reglas de negocio de manera determinística y generar trazabilidad completa del proceso, con el fin de evaluar mejoras en precisión, tiempos de respuesta y transparencia frente al proceso manual tradicional.
+
+\subsection*{Objetivos Específicos}
+
+\begin{itemize}
+    \item Construir una arquitectura modular basada en principios de diseño limpios que permita separar claramente la lógica de negocio, las simulaciones de datos externos, la persistencia y la API del prototipo.
+    
+    \item Implementar un conjunto de servicios simulados que recreen las consultas necesarias a fuentes de datos como SISBÉN, SNIES y el Ministerio de Educación Nacional, garantizando resultados coherentes y consistentes para el prototipo.
+    
+    \item Desarrollar un motor de decisiones centralizado que aplique las reglas de elegibilidad de \textit{Renta Joven} de manera automática y auditable, generando explicaciones claras de cada decisión tomada.
+    
+    \item Incorporar un sistema de auditoría interna capaz de registrar cada paso del proceso de evaluación, incluyendo consultas realizadas, tiempos de ejecución y reglas aplicadas.
+    
+    \item Implementar un módulo de métricas que permita evaluar atributos de calidad como latencia, tasa de aprobación, razones de rechazo y consistencia del motor de decisiones.
+    
+    \item Realizar una comparación cualitativa y cuantitativa entre el proceso simulado automatizado y el proceso tradicional, con énfasis en la reducción de tiempos y la mejora en transparencia.
+\end{itemize}
+
+\section{Preguntas de Investigación}
+
+El proyecto plantea una serie de preguntas orientadas a evaluar la viabilidad, utilidad y eficiencia de un motor de decisiones automatizado aplicado al proceso de verificación de requisitos del programa \textit{Renta Joven}. Las preguntas buscan determinar no solo el desempeño técnico del prototipo, sino también su potencial como alternativa práctica frente a los procesos manuales actualmente utilizados en entidades gubernamentales.
+
+\subsection*{Preguntas Principales}
+
+\begin{enumerate}
+    \item ¿En qué medida un motor de decisiones automatizado puede reducir los tiempos de verificación de requisitos para \textit{Renta Joven} en comparación con el proceso manual tradicional?
+
+    \item ¿Qué tan confiable y consistente es el motor al aplicar reglas de negocio reales sobre datos simulados provenientes de fuentes externas como SISBÉN, SNIES y el MEN?
+
+    \item ¿Hasta qué punto la trazabilidad generada por la auditoría interna del prototipo mejora la transparencia del proceso de evaluación?
+
+    \item ¿Cuáles atributos de calidad (latencia, precisión, consistencia, capacidad de auditoría) se ven más significativamente impactados por la automatización?
+
+    \item ¿Es viable replicar esta arquitectura en otros programas de subsidios del Estado colombiano sin requerir infraestructura avanzada como \textit{blockchain} o servicios en la nube?
+\end{enumerate}
+
+
+\section{Marco Conceptual y Estado del Arte}
+
+La verificación de requisitos para programas sociales en Colombia se encuentra marcada por procesos manuales, falta de interoperabilidad entre instituciones y demoras que pueden extenderse durante semanas. Para abordar este problema desde una perspectiva tecnológica realista, resulta necesario revisar conceptos clave relacionados con automatización, sistemas de reglas, trazabilidad, interoperabilidad gubernamental y transformación digital en el sector público. Esta sección presenta los fundamentos teóricos que enmarcan la solución propuesta, así como un panorama del estado actual de la digitalización de programas sociales.
+
+\subsection{GovTech y Transformación Digital en el Sector Público}
+
+El término \textit{GovTech} se refiere al uso de tecnologías emergentes y buenas prácticas de ingeniería para modernizar procesos gubernamentales, mejorar la eficiencia y aumentar la transparencia. En Colombia, la adopción de soluciones GovTech ha avanzado de manera desigual. Aunque existen plataformas como GELS, SECOP II y el Portal Único de Trámites, muchos programas sociales aún dependen de procesos manuales o sistemas fragmentados que no comparten datos entre sí.
+
+La literatura enfatiza que la transformación digital del sector público no consiste en sustituir funcionarios por sistemas automáticos, sino en rediseñar procesos para eliminar pasos innecesarios y facilitar decisiones basadas en datos. En este sentido, la automatización de trámites se vuelve una estrategia clave para reducir tiempos, mejorar la trazabilidad y mitigar riesgos de corrupción o fraude.
+
+\subsection{Automatización de Procesos y Sistemas de Reglas}
+
+La automatización de procesos administrativos se apoya frecuentemente en motores de reglas (\textit{business rules engines}), que permiten expresar la lógica de negocio de manera declarativa y evaluarla de forma determinística. Tecnologías como DMN (Decision Model and Notation), Drools o motores propietarios en bancos y aseguradoras son ejemplos ampliamente documentados en la industria.
+
+Un motor de decisiones automatizado permite que un conjunto de reglas previamente definidas se ejecute sin intervención humana, garantizando coherencia, repetibilidad y transparencia en las decisiones. Estos motores se utilizan para procesos como evaluación de créditos, detección de fraudes, clasificación de solicitudes y análisis de riesgos, lo cual demuestra su pertinencia para programas sociales como \textit{Renta Joven}.
+
+La propuesta desarrollada en este proyecto se inspira en estos principios, implementando un motor de reglas simplificado que evalúa criterios de elegibilidad de manera automática, utilizando datos provenientes de simulaciones de fuentes como SISBÉN, SNIES y el Ministerio de Educación Nacional.
+
+\subsection{Inspiración en Smart Contracts sin Blockchain}
+
+Aunque los \textit{smart contracts} suelen asociarse exclusivamente con \textit{blockchain}, su esencia conceptual —inmutabilidad lógica, automatización, ejecución determinística y trazabilidad del proceso— puede implementarse sin recurrir a infraestructuras descentralizadas.
+
+Un \textit{smart contract} tradicional es un programa que se ejecuta automáticamente cuando se cumplen ciertas condiciones y que, debido a su naturaleza distribuida, garantiza transparencia y auditabilidad. Sin embargo, la necesidad de infraestructura blockchain, costos transaccionales, complejidad de gobernanza y limitaciones en entornos institucionales hacen que su adopción en el sector público colombiano sea poco viable en el corto plazo.
+
+El motor de decisiones propuesto en este trabajo toma la esencia funcional de los \textit{smart contracts} —automatización, reglas autoejecutables y trazabilidad— y la implementa de manera centralizada, sobre una arquitectura de software convencional, más acorde con la infraestructura de las entidades gubernamentales actuales.
+
+\subsection{Interoperabilidad de Datos en Programas Sociales}
+
+Uno de los principales desafíos del Estado colombiano es la falta de interoperabilidad entre instituciones. Cada programa o entidad almacena sus datos en sistemas aislados, lo que obliga a realizar verificaciones manuales o a depender de integraciones lentas y frágiles. Reportes de Contraloría y Planeación Nacional evidencian que esta fragmentación no solo genera demoras, sino también errores, inconsistencias y dificultades para detectar fraudes.
+
+El proceso de validación para \textit{Renta Joven} implica, al menos, consultar:
+
+\begin{itemize}
+    \item El nivel de clasificación socioeconómica en el SISBÉN.
+    \item La condición de estudiante activo o graduado en el SNIES.
+    \item El estado académico reportado al MEN.
+    \item Información institucional proporcionada por entidades locales.
+\end{itemize}
+
+El prototipo desarrollado en este proyecto aborda esta problemática a través de servicios simulados que actúan como sustitutos de dichas fuentes. Si bien no representan una integración real, permiten modelar la complejidad de las consultas externas y evaluar el desempeño del motor de decisiones bajo condiciones controladas.
+
+\subsection{Trazabilidad, Auditoría y Transparencia}
+
+La trazabilidad es un aspecto fundamental en sistemas de decisión gubernamentales. Una ejecución automatizada sin registro detallado no solo genera desconfianza, sino que puede dificultar la identificación de fallos, inconsistencias o decisiones injustificadas.
+
+El prototipo integra un módulo de auditoría que registra:
+
+\begin{itemize}
+    \item Cada consulta realizada a las fuentes simuladas.
+    \item La regla aplicada en cada paso del proceso.
+    \item Los tiempos de ejecución.
+    \item El resultado final de la evaluación y sus razones.
+\end{itemize}
+
+Este enfoque se alinea con las recomendaciones internacionales de organismos como el Banco Mundial y la OCDE, que enfatizan la necesidad de sistemas explicables y auditables en la administración de beneficios sociales.
+
+\subsection{Estado del Arte en Automatización de Subsidios}
+
+Otros países han avanzado en la digitalización de procesos de verificación de subsidios mediante motores de reglas, integraciones centralizadas o sistemas de interoperabilidad robustos. En Estonia, por ejemplo, la infraestructura gubernamental X-Road permite que entidades compartan datos de manera segura, reduciendo la necesidad de trámites manuales. En Chile, el Registro Social de Hogares automatiza gran parte de las verificaciones de nivel socioeconómico.
+
+En Colombia, iniciativas como la Carpeta Ciudadana, la Historia Académica Única y la actualización del SISBÉN IV representan avances importantes, pero aún no existe un sistema unificado que permita automatizar completamente la asignación de subsidios.
+
+El prototipo desarrollado para este proyecto aporta un modelo práctico sobre cómo un motor de decisiones puede integrarse a este ecosistema como un componente central para evaluar elegibilidad de manera rápida, transparente y auditable.
+
+\section{Problema Actual en la Asignación de Subsidios en Colombia}
+
+La administración de subsidios en Colombia enfrenta dificultades estructurales derivadas de la fragmentación institucional, la falta de interoperabilidad entre sistemas y la alta dependencia de procesos manuales. Estas condiciones no solo ralentizan la evaluación de beneficiarios, sino que también aumentan el riesgo de errores, inconsistencias y posibles casos de fraude. Programas como \textit{Renta Joven}, orientados a poblaciones vulnerables, dependen de verificaciones que involucran múltiples fuentes de información con niveles de madurez tecnológica distintos, lo cual agrava la complejidad operativa.
+
+\subsection*{Fragmentación de Datos y Falta de Integración}
+
+El proceso de verificación de requisitos de \textit{Renta Joven} requiere consultar información proveniente de entidades como:
+
+\begin{itemize}
+    \item El SISBÉN (nivel socioeconómico).
+    \item El SNIES (estado académico y pertenencia a una institución educativa).
+    \item El Ministerio de Educación Nacional (historial académico y matrícula).
+    \item Instituciones de educación superior, alcaldías y entidades territoriales.
+\end{itemize}
+
+Cada una opera con sistemas independientes, esquemas de datos distintos y mecanismos heterogéneos de acceso. En muchos casos, estas instituciones no cuentan con APIs públicas o sus procesos de consulta dependen de solicitudes manuales, reportes periódicos o interoperabilidad limitada. Esto genera que la validación de un único beneficiario pueda tardar días o incluso semanas.
+
+\subsection*{Demoras Operativas y Carga Administrativa}
+
+El Estado colombiano reconoce que la asignación y actualización de subsidios puede tardar entre 30 y 45 días debido a:
+
+\begin{itemize}
+    \item Revisión manual de documentos.
+    \item Validación directa con instituciones educativas.
+    \item Procesos de cruce de información que no están automatizados.
+    \item Errores en reportes o inconsistencias entre bases de datos.
+\end{itemize}
+
+Estas demoras afectan tanto a los beneficiarios como a los operadores del programa, quienes deben gestionar grandes volúmenes de solicitudes de manera manual o semiautomática, lo que incrementa la incidencia de retrasos, reprocesos y congestión administrativa.
+
+\subsection*{Riesgo de Errores y Posible Fraude}
+
+La falta de un sistema centralizado y auditado facilita la existencia de:
+
+\begin{itemize}
+    \item Datos desactualizados en una o varias instituciones.
+    \item Estudiantes que reciben subsidios sin cumplir los requisitos actuales.
+    \item Casos de fraude por inconsistencias entre bases.
+    \item Dificultad para detectar comportamientos anómalos u omisiones.
+\end{itemize}
+
+Sin un mecanismo automatizado que permita registrar cada paso del proceso, la trazabilidad queda sujeta a las prácticas individuales de cada entidad, lo cual dificulta los ejercicios de control, seguimiento y auditoría.
+
+\subsection*{Necesidad de un Mecanismo Automatizado y Trazable}
+
+La problemática descrita evidencia la necesidad de contar con un sistema capaz de:
+
+\begin{itemize}
+    \item Integrar datos de diversas fuentes —reales o simuladas— bajo un flujo coherente.
+    \item Aplicar reglas de elegibilidad de manera determinística.
+    \item Reducir tiempos operativos mediante automatización.
+    \item Ofrecer trazabilidad completa que permita auditoría posterior.
+\end{itemize}
+
+El prototipo desarrollado en este proyecto busca precisamente responder a esta necesidad, demostrando que es posible evaluar beneficiarios de manera rápida, consistente y auditable sin requerir infraestructura compleja ni cambios institucionales profundos.
+
+
+\section{Propuesta de Solución: Motor de Decisiones Automatizado para Renta Joven}
+
+La solución propuesta consiste en el diseño e implementación de un \textbf{motor de decisiones automatizado} capaz de evaluar los requisitos del programa \textit{Renta Joven} utilizando datos provenientes de servicios simulados que representan entidades como el SISBÉN, el SNIES y el Ministerio de Educación Nacional. El enfoque prioriza la automatización, la trazabilidad y la determinación lógica de cada paso del proceso, sin requerir infraestructura descentralizada ni tecnologías complejas como \textit{blockchain} o servicios en la nube.
+
+El motor actúa como un núcleo determinístico que recibe los datos de un solicitante, ejecuta consultas a las fuentes externas simuladas y aplica un conjunto de reglas de negocio inspiradas en los criterios oficiales del programa. Cada decisión generada por el motor queda registrada en un sistema de auditoría, lo que garantiza transparencia y capacidad de verificación posterior.
+
+\subsection{Principios que Fundamentan la Solución}
+
+El diseño del prototipo se basa en cuatro principios centrales:
+
+\begin{itemize}
+    \item \textbf{Determinismo:} para una misma entrada, el sistema debe producir siempre el mismo resultado, sin variaciones ni criterios ambiguos.
+    
+    \item \textbf{Trazabilidad:} cada verificación, consulta y regla aplicada debe generar un registro auditable que explique el proceso completo.
+    
+    \item \textbf{Modularidad:} la lógica de negocio, las fuentes externas, la API y la persistencia deben ser componentes separados para garantizar mantenibilidad y claridad arquitectónica.
+    
+    \item \textbf{Automatización:} el sistema debe poder evaluar solicitudes completas sin intervención humana, de forma rápida y consistente.
+\end{itemize}
+
+Estos principios permiten reproducir la esencia funcional de los \textit{smart contracts} —auto-ejecución, transparencia y explicabilidad— sin depender de una infraestructura blockchain.
+
+\subsection{Flujo General de la Solución}
+
+El flujo de evaluación propuesto sigue una secuencia clara y reproducible:
+
+\begin{enumerate}
+    \item El usuario o sistema externo registra una solicitud de verificación a través de un punto de acceso REST.
+    \item El motor de decisiones consulta los servicios simulados que representan las entidades oficiales.
+    \item Cada consulta produce un registro en el módulo de auditoría, incluyendo tiempos, datos obtenidos y estado de la respuesta.
+    \item El motor evalúa las reglas de negocio del programa \textit{Renta Joven} sobre los datos agregados.
+    \item El resultado final —aprobado, rechazado o pendiente— se almacena junto a su justificación.
+    \item El módulo de métricas agrega información sobre latencia, tasas de aprobación, razones frecuentes de rechazo y consistencia del proceso.
+\end{enumerate}
+
+\subsection{Justificación de la Solución frente a Alternativas Existentes}
+
+La literatura propone distintos enfoques para modernizar la verificación de subsidios, incluyendo sistemas distribuidos, integraciones profundas entre entidades o plataformas basadas en \textit{blockchain}. No obstante, estos enfoques suelen enfrentar barreras como costos de implementación, complejidad técnica, limitaciones institucionales o ausencia de infraestructura adecuada.
+
+La propuesta de este proyecto adopta una alternativa pragmática:
+
+\begin{itemize}
+    \item Aprovecha tecnologías ampliamente disponibles en entidades públicas.
+    \item Reduce la complejidad sin sacrificar transparencia ni auditabilidad.
+    \item Facilita la replicabilidad en otros programas sociales.
+    \item Permite mediciones objetivas de desempeño y calidad.
+\end{itemize}
+
+El prototipo no depende de infraestructura externa y puede ejecutarse completamente en entornos locales, lo que facilita tanto su evaluación como su potencial adopción en escenarios reales.
+
+\subsection{Alcance de la Solución}
+
+La solución desarrollada no pretende sustituir los sistemas institucionales, sino demostrar la viabilidad técnica de un motor de decisiones automatizado que:
+
+\begin{itemize}
+    \item Centraliza la evaluación de requisitos.
+    \item Elimina la necesidad de consultas manuales.
+    \item Genera explicaciones auditables del proceso.
+    \item Reduce significativamente los tiempos de análisis.
+\end{itemize}
+
+Este prototipo constituye un \textit{proof of concept} que sirve como punto de partida para futuras integraciones reales, ampliaciones funcionales y estudios sobre automatización en programas sociales del Estado colombiano.
+
+
+\section{Arquitectura Técnica del Prototipo}
+
+La arquitectura del prototipo implementado para el motor de decisiones automatizado se organizó siguiendo principios de diseño de software modular, separación de responsabilidades y facilidad de evaluación. El sistema fue construido utilizando Spring Boot como plataforma de backend, con una base de datos en memoria H2 para almacenamiento temporal, y servicios simulados que emulan las fuentes de datos externas requeridas por el programa \textit{Renta Joven}. El código fuente está disponible en el repositorio público del proyecto \textit{AREP-Proyecto}.:contentReference[oaicite:1]{index=1}
+
+\subsection{Visión General}
+
+El prototipo se compone de varias capas lógicas claramente separadas:
+
+\begin{itemize}
+    \item \textbf{Capa de API:} expone los endpoints REST que reciben solicitudes de verificación de elegibilidad.
+    \item \textbf{Capa de Aplicación:} contiene el motor de decisión principal que aplica reglas de negocio.
+    \item \textbf{Capa de Dominio:} define las entidades centrales del sistema y sus estados (por ejemplo, la solicitud y la decisión resultante).
+    \item \textbf{Capa de Infraestructura:} implementa los repositorios de persistencia y los servicios que simulan las fuentes externas como SISBÉN, SNIES y MEN.
+    \item \textbf{Capa de Componentes Compartidos:} incluye módulos de auditoría y métricas para registrar cada paso del proceso y medir atributos de calidad.
+\end{itemize}
+
+Esta organización responde a los principios de arquitectura hexagonal ligera, que facilitan el mantenimiento, las pruebas y la evolución del prototipo.
+
+\subsection{Capa de API}
+
+La entrada al prototipo se realiza a través de una API REST construida con Spring MVC. Los endpoints principales incluyen:
+
+\begin{itemize}
+    \item \texttt{POST /api/renta-joven/verificar}: recibe los datos de un solicitante (por ejemplo, cédula y matrícula) y devuelve una decisión de elegibilidad.
+    \item \texttt{GET /api/renta-joven/solicitud/\{id\}/audit}: retorna los registros de auditoría asociados a una solicitud específica.
+    \item \texttt{GET /api/renta-joven/metrics/summary}: provee métricas agregadas del sistema, como tiempos de respuesta y tasas de aprobación.
+\end{itemize}
+
+Esta capa actúa únicamente como puente entre el cliente y el motor de decisión, desacoplando la lógica de negocio de la interfaz de comunicación con el exterior.
+
+\subsection{Capa de Aplicación}
+
+El corazón del sistema es el motor de decisiones, implementado como un servicio Spring que orquesta las consultas a los servicios externos simulados y aplica las reglas de elegibilidad de \textit{Renta Joven}. Esta capa encapsula la lógica de negocio y garantiza que los datos recibidos pasen por una evaluación determinística y auditada. Los resultados se expresan en términos como \textit{APROBADO}, \textit{RECHAZADO} o \textit{REVISION\_MANUAL}.
+
+\subsection{Capa de Dominio}
+
+Las entidades centrales del dominio incluyen:
+
+\begin{itemize}
+    \item \texttt{Solicitud}: representa una petición de evaluación, con sus atributos (cédula, matrícula, estado, tiempo de procesamiento, etc.).
+    \item \texttt{LogAuditoria}: registra cada paso significativo del proceso de evaluación (por ejemplo, resultados de cada verificación externa).
+    \item \texttt{Enums}: tipos como \texttt{Decision} que normalizan los posibles resultados.
+\end{itemize}
+
+Estas entidades forman la representación del modelo de negocio dentro del prototipo.
+
+\subsection{Capa de Infraestructura}
+
+La persistencia se realiza mediante Spring Data JPA con la base de datos en memoria H2, lo que permite almacenar y consultar solicitudes y logs sin necesidad de configurar sistemas externos complejos.
+
+Para simular las fuentes de datos externas, se implementaron servicios locales que generan respuestas basadas en reglas lógicas controladas. Por ejemplo, el servicio que representa SISBÉN puede determinar elegibilidad según reglas prefijadas, mientras que los simuladores de SNIES y MEN imitan la respuesta de sistemas reales con datos plausibles.
+
+\subsection{Capa Compartida: Auditoría y Métricas}
+
+La auditoría interna captura:
+
+\begin{itemize}
+    \item resultados individuales de cada verificación,
+    \item tiempos de consulta y decisión,
+    \item estados intermedios y finales.
+\end{itemize}
+
+Estas trazas son fundamentales para explicar decisiones y evaluar atributos de calidad del motor de decisiones.
+
+El módulo de métricas agrega los datos registrados para producir estadísticas de desempeño como:
+
+\begin{itemize}
+    \item tiempo promedio de evaluación,
+    \item tasa de aprobación,
+    \item razones de rechazo más comunes,
+    \item distribución de tiempos por tipo de verificación.
+\end{itemize}
+
+\subsection{Resumen de Tecnologías Utilizadas}
+
+\begin{itemize}
+    \item \textbf{Java + Spring Boot:} para la API y lógica de negocio.
+    \item \textbf{H2:} base de datos en memoria para persistencia ligera.
+    \item \textbf{Spring Data JPA:} para abstracción de repositorios.
+    \item \textbf{Simuladores locales:} servicios de verificación externos emulados en Java.
+    \item \textbf{GitHub}: repositorio con el código fuente del prototipo.:contentReference[oaicite:2]{index=2}
+\end{itemize}
+
+
+\end{document}

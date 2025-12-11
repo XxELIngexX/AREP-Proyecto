@@ -1,0 +1,89 @@
+# 🇨🇴 Sistema de Verificación Automatizada de Subsidios - Renta Joven
+
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/XxELIngexX/AREP-Proyecto)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/XxELIngexX/AREP-Proyecto)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
+
+> **Motor de Decisión Automatizado inspirado en principios de Smart Contracts para la gestión transparente, eficiente y auditable de subsidios estatales en Colombia**
+
+---
+
+# 📋 Tabla de Contenidos
+- El Problema
+- La Solución
+- Arquitectura
+- Validaciones Implementadas
+- Instalación
+- Guía de Uso
+- Endpoints API
+- Testing Masivo
+- Métricas y Resultados
+- Estructura del Proyecto
+- Tecnologías
+- Roadmap
+- Contribuciones
+- Autor
+- Licencia
+
+---
+
+# 🚨 El Problema
+
+La gestión de subsidios estatales en Colombia enfrenta desafíos críticos:
+
+- ⏱️ **Tiempos excesivos:** El procesamiento promedio de una solicitud toma 45 días calendario  
+- 💰 **Costos elevados:** El 18% del presupuesto ($15.75 billones COP) se consume en costos operativos  
+- 🔴 **Filtraciones:** El 7.2% de los recursos llegan a hogares no elegibles (~$6.3 billones COP)  
+- 📊 **Fragmentación sistémica:** Bases de datos críticas (SISBÉN, SIMUR, RUPD) completamente desconectadas  
+- 🕵️ **Duplicidad masiva:** ~350,000 beneficiarios duplicados en el sistema  
+
+### Casos Reales que Motivaron el Proyecto
+
+- **Soacha, 2023:** 2,300 subsidios asignados a personas fallecidas o inexistentes  
+- **La Guajira, 2024:** Duplicidad masiva excluyó irregularmente a 12,000 familias wayúu  
+
+---
+
+# 💡 La Solución
+
+Este prototipo demuestra la viabilidad técnica de un motor de decisión automatizado inspirado en principios de *smart contracts* (transparencia, inmutabilidad, auditoría), implementado como un sistema centralizado en la nube.
+
+## ✨ Características Clave
+
+- ✅ Verificación automatizada en tiempo real contra 3 fuentes oficiales (SISBÉN, MEN, SNIES)  
+- ✅ Decisiones en menos de 2 segundos vs 45 días del sistema tradicional  
+- ✅ Trazabilidad completa e inmutable de cada paso del proceso  
+- ✅ Sistema anti-fraude con validación de coherencia cédula-edad  
+- ✅ Auditoría en tiempo real con registro de cada validación  
+- ✅ Métricas cuantitativas para análisis académico y gubernamental  
+
+---
+
+# 🎯 Resultados Esperados
+
+| Métrica               | Sistema Tradicional | Sistema Automatizado | Mejora      |
+|----------------------|---------------------|-----------------------|-------------|
+| Tiempo de procesamiento | 45 días             | ~1.2 segundos         | 99.9997%    |
+| Costo por solicitud     | $17,680 COP         | <$100 COP             | 99.4%       |
+| Trazabilidad            | Parcial/Manual      | 100% Automática       | 100%        |
+| Detección de fraude     | Reactiva            | Proactiva/Preventiva  | N/A         |
+
+---
+
+# 🏗️ Arquitectura
+
+El sistema implementa una arquitectura hexagonal ligera con las siguientes capas:
+
+
+## 💡 La Solución
+
+### Motor de Decisión Automatizado
+
+Un sistema que automatiza completamente el proceso de verificación mediante:
+
+## 🏗️ Arquitectura
+
+
+![alt text](docs/arq.png)
