@@ -1,0 +1,490 @@
+{
+  "info": {
+    "name": "Renta Joven API v2.0 - Con Validaciones Completas",
+    "description": "Colección para probar el motor de decisión con datos del dataset_maestro.csv",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🏥 Health & Status",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "✅ Casos APROBADOS (del dataset)",
+      "item": [
+        {
+          "name": "Caso 1: Joven elegible - Nivel A, sin título, matrícula vigente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1120000001\",\n  \"matriculaId\": \"MAT-00000001\",\n  \"edad\": 18\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        },
+        {
+          "name": "Caso 2: Joven elegible - Nivel B, 22 años",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1100000002\",\n  \"matriculaId\": \"MAT-00000002\",\n  \"edad\": 22\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        },
+        {
+          "name": "Caso 3: Joven elegible - Nivel C, 25 años",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1080000003\",\n  \"matriculaId\": \"MAT-00000003\",\n  \"edad\": 25\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Casos RECHAZADOS - Por edad",
+      "item": [
+        {
+          "name": "Rechazo: Menor de 14 años",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1130000001\",\n  \"matriculaId\": \"MAT-00000001\",\n  \"edad\": 12\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        },
+        {
+          "name": "Rechazo: Mayor de 28 años",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1060000001\",\n  \"matriculaId\": \"MAT-00000001\",\n  \"edad\": 32\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Casos RECHAZADOS - Por SISBEN",
+      "item": [
+        {
+          "name": "Rechazo: Nivel D (no elegible)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1100000004\",\n  \"matriculaId\": \"MAT-00000004\",\n  \"edad\": 20\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Casos RECHAZADOS - Por título profesional",
+      "item": [
+        {
+          "name": "Rechazo: Ya tiene título profesional",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1080000008\",\n  \"matriculaId\": \"MAT-00000008\",\n  \"edad\": 26\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Casos RECHAZADOS - Por matrícula",
+      "item": [
+        {
+          "name": "Rechazo: Matrícula NO vigente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1100000005\",\n  \"matriculaId\": \"MAT-00000003\",\n  \"edad\": 21\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        },
+        {
+          "name": "Rechazo: Matrícula no encontrada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1100000001\",\n  \"matriculaId\": \"MAT-99999999\",\n  \"edad\": 20\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚨 Casos FRAUDE - Detección anti-fraude",
+      "item": [
+        {
+          "name": "Fraude: Cédula-Edad NO coherentes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1130000000\",\n  \"matriculaId\": \"MAT-00000001\",\n  \"edad\": 35\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        },
+        {
+          "name": "Fraude: Cédula joven con edad avanzada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1145000000\",\n  \"matriculaId\": \"MAT-00000001\",\n  \"edad\": 40\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/verificar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "verificar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Consultas y Auditoría",
+      "item": [
+        {
+          "name": "Ver solicitud por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/solicitud/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "solicitud", "1"]
+            }
+          }
+        },
+        {
+          "name": "Ver auditoría completa de solicitud",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/solicitud/1/audit",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "solicitud", "1", "audit"]
+            }
+          }
+        },
+        {
+          "name": "Ver solicitudes por cédula",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/solicitudes?cedula=1120000001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "solicitudes"],
+              "query": [
+                {
+                  "key": "cedula",
+                  "value": "1120000001"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ver todas las aprobadas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/solicitudes/aprobadas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "solicitudes", "aprobadas"]
+            }
+          }
+        },
+        {
+          "name": "Ver todas las rechazadas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/solicitudes/rechazadas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "solicitudes", "rechazadas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📈 Métricas",
+      "item": [
+        {
+          "name": "Obtener resumen de métricas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/renta-joven/metrics/summary",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "renta-joven", "metrics", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Reporte académico completo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/reporte/academico",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "reporte", "academico"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧪 Testing Masivo",
+      "item": [
+        {
+          "name": "Generar 100 solicitudes aleatorias",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/test/generar-solicitudes?cantidad=100",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "test", "generar-solicitudes"],
+              "query": [
+                {
+                  "key": "cantidad",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Generar 500 solicitudes aleatorias",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/test/generar-solicitudes?cantidad=500",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "test", "generar-solicitudes"],
+              "query": [
+                {
+                  "key": "cantidad",
+                  "value": "500"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Generar 1000 solicitudes aleatorias",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/test/generar-solicitudes?cantidad=1000",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "test", "generar-solicitudes"],
+              "query": [
+                {
+                  "key": "cantidad",
+                  "value": "1000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
