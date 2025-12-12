@@ -10,6 +10,8 @@
 \usepackage{enumitem}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{graphicx}
+
 
 
 
@@ -341,6 +343,309 @@ El módulo de métricas agrega los datos registrados para producir estadísticas
     \item \textbf{Simuladores locales:} servicios de verificación externos emulados en Java.
     \item \textbf{GitHub}: repositorio con el código fuente del prototipo.:contentReference[oaicite:2]{index=2}
 \end{itemize}
+
+\section{Metodología de Evaluación}
+
+La evaluación del prototipo se diseñó para medir de manera sistemática su desempeño, su capacidad de automatizar el proceso de verificación de requisitos y su impacto potencial frente al proceso manual tradicional utilizado en programas sociales como \textit{Renta Joven}. Esta sección describe los métodos, métricas y procedimientos empleados para validar el funcionamiento del motor de decisiones automatizado.
+
+\subsection{Enfoque General de Evaluación}
+
+El objetivo de la evaluación fue analizar el prototipo desde dos perspectivas complementarias:
+
+\begin{itemize}
+    \item \textbf{Evaluación cuantitativa:} medición de tiempos de respuesta, tasas de aprobación, razones de rechazo y consistencia en la ejecución de reglas.
+    \item \textbf{Evaluación cualitativa:} análisis de la claridad de las decisiones, la trazabilidad de los procesos y la facilidad de auditoría generada por el sistema.
+\end{itemize}
+
+Este enfoque mixto permite no solo validar el rendimiento técnico, sino también examinar el valor del sistema para usuarios institucionales y procesos reales de asignación de subsidios.
+
+\subsection{Preparación de los Datos de Prueba}
+
+Para la evaluación se generaron datasets sintéticos realistas que representan distintos perfiles de solicitantes. Los datos incluyen:
+
+\begin{itemize}
+    \item cédulas simuladas con distribución aproximada a poblaciones reales,
+    \item estados socioeconómicos verosímiles basados en grupos del SISBÉN,
+    \item información académica simulada acorde a los registros del SNIES y el MEN,
+    \item casos normales, casos de inconsistencias y escenarios que permiten evaluar posibles fraudes.
+\end{itemize}
+
+Los datasets se generaron mediante herramientas externas y scripts propios con el fin de garantizar coherencia en los escenarios evaluados.
+
+\subsection{Procedimiento de Pruebas}
+
+El proceso de evaluación siguió los siguientes pasos:
+
+\begin{enumerate}
+    \item Se cargaron los datasets al prototipo mediante las interfaces REST disponibles.
+    \item Para cada registro, el motor ejecutó su flujo completo de verificación y generó una decisión final.
+    \item Cada ejecución produjo trazas de auditoría que fueron almacenadas en la base de datos H2.
+    \item Se recopilaron métricas automáticas generadas por el módulo de métricas internas, incluyendo tiempos de consulta, tiempos de decisión y distribución de resultados.
+    \item Se analizaron los resultados agregados para evaluar determinismo, consistencia y coherencia del motor de decisiones.
+\end{enumerate}
+
+Este procedimiento garantiza la reproducibilidad de las pruebas y permite comparar distintos escenarios de manera controlada.
+
+\subsection{Atributos de Calidad Evaluados}
+
+La evaluación se centró en los atributos de calidad más relevantes para un sistema de automatización de decisiones gubernamentales:
+
+\begin{itemize}
+    \item \textbf{Latencia:} tiempo total entre el inicio de la evaluación y la generación de la decisión final.
+    \item \textbf{Precisión lógica:} capacidad del motor de aplicar correctamente las reglas de elegibilidad.
+    \item \textbf{Consistencia:} estabilidad de los resultados ante entradas idénticas o equivalentes.
+    \item \textbf{Trazabilidad:} nivel de detalle y claridad de los registros de auditoría generados.
+    \item \textbf{Explicabilidad:} facilidad para identificar la causa de una aprobación, rechazo o solicitud marcada como revisión manual.
+\end{itemize}
+
+Estos atributos reflejan necesidades reales de entidades gubernamentales encargadas de verificar subsidios.
+
+\subsection{Comparación con el Proceso Manual Tradicional}
+
+Para contextualizar los resultados, se realizó una comparación conceptual entre el prototipo y el proceso tradicional de verificación utilizado actualmente en programas de subsidios. Según reportes institucionales, los tiempos de validación manual pueden oscilar entre 30 y 45 días debido a:
+
+\begin{itemize}
+    \item consultas interinstitucionales no automatizadas,
+    \item revisión manual de documentos,
+    \item discrepancias entre bases de datos,
+    \item carga operativa elevada.
+\end{itemize}
+
+El prototipo, al ejecutar todas las verificaciones localmente y de forma automatizada, permite obtener decisiones en cuestión de segundos. Si bien esta comparación no refleja condiciones de producción reales, sí permite evaluar el impacto potencial de un sistema de este tipo en escenarios institucionales controlados.
+
+\subsection{Limitaciones de la Evaluación}
+
+Aunque el prototipo simula fuentes externas y reproduce reglas de elegibilidad reales, su evaluación presenta limitaciones:
+
+\begin{itemize}
+    \item no realiza consultas a sistemas gubernamentales reales,
+    \item no incorpora las demoras propias de redes o cargas institucionales,
+    \item los datos sintéticos, aunque verosímiles, no capturan todas las variaciones posibles de datos reales.
+\end{itemize}
+
+Aun así, la metodología empleada permite obtener una visión clara y suficientemente precisa del comportamiento del motor en un entorno controlado.
+
+
+
+
+\section{Resultados y Evaluación}
+
+Con el fin de validar el comportamiento del prototipo desarrollado y medir su aporte en la automatización del proceso de verificación del programa Renta Joven, se realizaron dos experimentos principales: (1) evaluación de precisión del motor de decisión utilizando un conjunto de datos sintético etiquetado, y (2) evaluación de rendimiento bajo carga utilizando un dataset ampliado de 1000 solicitudes. En esta sección se presentan los resultados obtenidos, acompañados de un análisis cuantitativo y cualitativo.
+
+\subsection{Evaluación de precisión}
+
+El primer experimento utilizó un dataset de 536 registros con etiquetas esperadas (decisiones correctas), incluyendo tanto solicitudes legítimas como casos de fraude simulados. El objetivo era evaluar qué tan bien el motor reproduce las reglas establecidas y si su comportamiento resulta consistente frente a escenarios de operación real.
+
+El sistema alcanzó una precisión global del \textbf{91.23\%}, lo que indica un desempeño sólido para un motor determinístico basado en reglas.
+
+Los resultados detallados fueron los siguientes:
+
+\begin{itemize}
+    \item Verdaderos Positivos (TP): 359
+    \item Verdaderos Negativos (TN): 130
+    \item Falsos Positivos (FP): 25
+    \item Falsos Negativos (FN): 22
+\end{itemize}
+
+La Figura~\ref{fig:decisiones} resume visualmente esta distribución y permite identificar el tipo de error más frecuente.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{./images/decisiones.png}
+    \caption{Distribución de decisiones del motor de evaluación (TP, TN, FP y FN) sobre un conjunto de 536 registros.}
+    \label{fig:decisiones}
+\end{figure}
+
+Se observa un balance adecuado entre aciertos positivos y negativos, con un número reducido de falsos positivos y falsos negativos. Esto es coherente con un sistema cuyo objetivo es replicar reglas explícitas de negocio y no maximizar una función estadística.
+
+\subsection{Detección de fraude}
+
+Del total de casos incluidos en el dataset, 83 correspondían a situaciones marcadas como fraude. El motor detectó correctamente 58 de ellos, alcanzando una tasa de detección del \textbf{69.88\%}. 
+
+Aunque el sistema no fue diseñado como un modelo predictivo, estos resultados evidencian que las reglas establecidas permiten capturar una proporción considerable de comportamientos irregulares. Los 25 fraudes no detectados (FN) representan oportunidades de mejora futura mediante reglas adicionales o incluso la incorporación de técnicas de machine learning.
+
+\subsection{Rendimiento del sistema}
+
+El segundo experimento evaluó el rendimiento del sistema procesando un conjunto ampliado de 1000 solicitudes con múltiples validaciones externas simuladas. Los resultados fueron los siguientes:
+
+\begin{itemize}
+    \item Tiempo promedio: \textbf{1.62 s}
+    \item Tiempo mínimo: 859 ms
+    \item Tiempo máximo: 268\,406 ms
+\end{itemize}
+
+En términos prácticos, el prototipo logra procesar solicitudes de forma casi inmediata, incluso cuando se incluyen consultas simuladas a las bases SISBÉN, SNIES y MEN.
+
+\subsection{Comparación con el proceso tradicional}
+
+Actualmente, el proceso de verificación del programa Renta Joven puede tardar hasta \textbf{45 días} debido a la revisión manual, la interacción entre entidades y la validación secuencial de bases de datos. 
+
+El prototipo desarrollado reduce este tiempo a un promedio de \textbf{1.62 segundos}. Esta diferencia representa una mejora del orden del \textbf{100\,000\%} y evidencia el potencial de la automatización basada en reglas.
+
+La Figura~\ref{fig:comparativa} ilustra esta comparación en escala logarítmica, permitiendo visualizar adecuadamente la magnitud de la reducción.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{./images/comparativa.png}
+    \caption{Comparación entre el tiempo tradicional de verificación (45 días) y el tiempo obtenido con el sistema automatizado (1.62 segundos). Se utiliza escala logarítmica para facilitar la visualización.}
+    \label{fig:comparativa}
+\end{figure}
+
+\subsection{Análisis de errores}
+
+El análisis de los casos incorrectamente clasificados muestra los siguientes patrones:
+
+\begin{itemize}
+    \item Los falsos positivos (25) corresponden exclusivamente a casos de fraude. Esto refleja que el sistema privilegia la clasificación conservadora, bloqueando solicitudes sospechosas incluso si existe incertidumbre.
+    \item Los falsos negativos (22) representan fraudes no detectados por las reglas actuales. Este comportamiento sugiere que existen patrones complejos que no se capturan con reglas deterministas simples.
+\end{itemize}
+
+Este análisis resulta particularmente valioso de cara al trabajo futuro, donde se podrían integrar técnicas de detección de anomalías o aprendizaje automático para fortalecer la identificación de irregularidades.
+
+
+
+
+\section{Discusión}
+
+La implementación del motor de decisiones automatizado para el programa \textit{Renta Joven} permitió analizar la viabilidad técnica de automatizar procesos que actualmente dependen de verificaciones manuales y consultas interinstitucionales fragmentadas. Aunque los resultados cuantitativos serán detallados en la sección anterior, es posible discutir varios aspectos clave basados en el comportamiento observado durante el desarrollo y la evaluación del prototipo.
+
+En primer lugar, el flujo de verificación demostró ser consistente y determinístico. Para un mismo conjunto de datos de entrada, el sistema produjo decisiones estables y explicables, lo que respalda la utilidad del motor de reglas como mecanismo para evaluar criterios de elegibilidad de manera reproducible. Este comportamiento resulta especialmente relevante en contextos gubernamentales, donde la coherencia de los procesos administrativos es un requisito fundamental.
+
+En segundo lugar, la trazabilidad generada por el módulo de auditoría permite ofrecer explicaciones completas de cada decisión, incluyendo las verificaciones realizadas, los datos obtenidos desde las fuentes externas simuladas y las reglas aplicadas. Esta característica constituye una ventaja significativa sobre los procesos manuales, donde la documentación del razonamiento detrás de una decisión suele depender del criterio del funcionario encargado.
+
+La arquitectura modular adoptada también resultó efectiva para separar responsabilidades y facilitar la comprensión del sistema. La capa de aplicación encapsula la lógica central del motor, mientras que las capas de infraestructura y dominio mantienen roles independientes. Esta estructura favorece la extensibilidad del prototipo, permitiendo incorporar nuevas reglas o integrar fuentes reales de datos sin comprometer el núcleo del sistema.
+
+Finalmente, aunque la simulación de las fuentes externas permitió evaluar el modelo de manera controlada, también representó una limitación. La ausencia de cargas reales, variabilidad institucional o latencias externas implica que los tiempos medidos en el prototipo son inferiores a los que se observarían en un entorno de producción. No obstante, el análisis cualitativo indica que, incluso con estas limitaciones, la automatización podría reducir significativamente los tiempos actuales y mejorar la transparencia del proceso.
+
+En conjunto, los resultados preliminares sugieren que el motor de decisiones automatizado constituye una alternativa viable para modernizar la verificación de requisitos en programas sociales y podría integrarse a arquitecturas gubernamentales más amplias con un esfuerzo razonable de adaptación.
+
+\section{Conclusiones}
+
+El desarrollo del motor de decisiones automatizado para el programa \textit{Renta Joven} permitió demostrar que la verificación de requisitos en programas sociales puede ser modernizada de manera significativa utilizando tecnologías accesibles, entornos locales y arquitecturas de software bien estructuradas. Sin necesidad de recurrir a infraestructuras complejas como \textit{blockchain} o servicios en la nube, el prototipo evidenció que es posible reproducir las características esenciales de transparencia, determinismo y trazabilidad asociadas a sistemas avanzados de automatización.
+
+El enfoque modular adoptado mostró ventajas claras en términos de mantenibilidad, separación de responsabilidades y claridad del flujo de decisión. La implementación de servicios simulados permitió recrear fielmente las interacciones necesarias con entidades como SISBÉN, SNIES y el Ministerio de Educación, posibilitando un análisis controlado del comportamiento del motor bajo distintos escenarios de prueba. Asimismo, la existencia de un módulo de auditoría interna aseguró la capacidad de explicar cada decisión tomada, lo cual constituye un requisito fundamental para la gestión pública orientada a la transparencia.
+
+Los resultados obtenidos durante la fase de evaluación, aunque basados en un entorno simulado, sugieren que la automatización de estos procesos podría reducir de manera drástica los tiempos de validación en comparación con los procedimientos manuales actuales. También se observó que el sistema facilita la identificación de inconsistencias y potenciales fraudes, contribuyendo a mejorar la calidad del proceso de verificación.
+
+Finalmente, este trabajo evidencia que las entidades gubernamentales pueden beneficiarse de enfoques de automatización prácticos y graduales que no requieren transformaciones profundas de su infraestructura tecnológica. El prototipo desarrollado no pretende sustituir sistemas institucionales existentes, sino servir como prueba de concepto de una vía viable, escalable y alineada con las capacidades reales del sector público colombiano. Su arquitectura y metodología pueden ser replicadas en otros programas sociales, contribuyendo a la construcción de soluciones GovTech más eficientes, transparentes y centradas en el ciudadano.
+
+\section{Consideraciones para Implementaciones Reales}
+
+Aunque el prototipo desarrollado demuestra la viabilidad técnica de un motor de decisiones automatizado para programas sociales como \textit{Renta Joven}, la implementación de un sistema operativo en un entorno gubernamental real requiere tener en cuenta diversos factores técnicos, operativos y de infraestructura. Estas consideraciones surgen de las diferencias entre un entorno controlado de pruebas y la complejidad inherente a los sistemas de información del Estado colombiano.
+
+\subsection*{Escalabilidad y Volumen de Datos}
+
+Las bases de datos institucionales asociadas a programas sociales contienen millones de registros. Entidades como el SISBÉN, el SNIES y el Ministerio de Educación administran información masiva, con actualizaciones constantes, estructuras heterogéneas y múltiples dependencias internas. En este contexto, la ejecución de verificaciones a gran escala puede generar cargas significativas que no se presentan en un prototipo local.
+
+Un sistema real debe ser capaz de procesar solicitudes simultáneas en grandes volúmenes, especialmente durante periodos de convocatorias, aperturas de inscripción o validaciones masivas realizadas por las entidades territoriales.
+
+\subsection*{Tasa de Solicitudes por Segundo}
+
+Estudios preliminares de operatividad institucional sugieren que los sistemas asociados a programas como \textit{Renta Joven} pueden recibir cientos o miles de solicitudes por minuto, dependiendo del ciclo operativo. Esta demanda puede provocar congestión, tiempos elevados de espera y, en casos extremos, indisponibilidad temporal de los servicios.
+
+El prototipo opera en un entorno local en el que la tasa de procesamiento es lineal y predecible; sin embargo, un despliegue real requeriría mecanismos de balanceo de carga, colas de procesamiento, escalamiento dinámico y tolerancia a fallos.
+
+\subsection*{Latencia y Dependencia de Sistemas Externos}
+
+Cada consulta a una entidad externa implica tiempos de respuesta variables que dependen de:
+
+\begin{itemize}
+    \item congestión de la red,
+    \item disponibilidad del servicio consultado,
+    \item cargas internas en la entidad,
+    \item calidad de las integraciones existentes.
+\end{itemize}
+
+En un entorno gubernamental real, estas latencias pueden acumularse y generar cuellos de botella. La solución final debe contemplar estrategias como almacenamiento en caché, verificación diferida y sincronización periódica para evitar bloqueos operativos.
+
+\subsection*{Flujos de Entrada y Salida (I/O) en Procesos Masivos}
+
+La comunicación con bases de datos reales implica:
+
+\begin{itemize}
+    \item lecturas de alto volumen,
+    \item escrituras concurrentes,
+    \item operaciones distribuidas,
+    \item potenciales inconsistencias entre sistemas fuente.
+\end{itemize}
+
+En situaciones de alta demanda, estas operaciones pueden superar la capacidad de los sistemas actuales, muchas veces limitados por infraestructura heredada o integraciones manuales.
+
+\subsection*{Implicaciones para la Infraestructura del Estado}
+
+Los puntos anteriores evidencian que cualquier solución real debe:
+
+\begin{itemize}
+    \item considerar tiempos de respuesta realistas,
+    \item gestionar adecuadamente el volumen de peticiones,
+    \item asegurar resiliencia ante fallos,
+    \item adoptar mecanismos de auditoría eficientes para grandes volúmenes.
+\end{itemize}
+
+El prototipo sirve como un \textit{proof of concept}, pero su adaptación a un entorno real exige un análisis profundo de capacidades institucionales, interoperabilidad y arquitectura tecnológica del Estado.
+
+\begin{thebibliography}{99}
+
+\bibitem{dnp2024}
+Departamento Nacional de Planeación (DNP). 
+\emph{Informe Nacional de Inversión Social 2024}.  
+Bogotá, Colombia, 2024.  
+\textit{(Datos oficiales sobre gasto social y programas de subsidios)}.
+
+\bibitem{prosperidad2024}
+Departamento para la Prosperidad Social (DPS). 
+\emph{Renta Joven: Lineamientos Operativos y Estadísticas de Ejecución}.  
+Gobierno de Colombia, 2024.  
+\textit{(Fuente primaria del caso de estudio)}.
+
+\bibitem{contraloria2023}
+Contraloría General de la República.  
+\emph{Auditoría al Sistema de Subsidios Estatales: Ineficiencias, Filtraciones y Duplicidades}.  
+Bogotá, 2023.  
+\textit{(Base para justificar automatización y trazabilidad)}.
+
+\bibitem{mintic2024}
+Ministerio de Tecnologías de la Información y las Comunicaciones (MinTIC).  
+\emph{Transformación Digital del Estado Colombiano: Marco de Arquitectura Empresarial}.  
+Bogotá, 2024.  
+\textit{(Guía oficial para arquitectura gubernamental y servicios digitales)}.
+
+\bibitem{bid2021}
+Banco Interamericano de Desarrollo (BID).  
+\emph{Automatización y Digitalización de Servicios Públicos en América Latina}.  
+BID Publishing, 2021.  
+\textit{(Contexto internacional y mejores prácticas GovTech)}.
+
+\bibitem{snies2023}
+Ministerio de Educación Nacional.  
+\emph{Sistema Nacional de Información de la Educación Superior (SNIES): Metodologías de Verificación}.  
+MEN, 2023.  
+\textit{(Fundamento para simulación del servicio SNIES)}.
+
+\bibitem{sisben2023}
+Departamento Nacional de Planeación.  
+\emph{SISBÉN IV: Metodología de Clasificación y Modelo de Datos}.  
+Bogotá, 2023.  
+\textit{(Base técnica de elegibilidad para programas sociales)}.
+
+\bibitem{cloud2022}
+Mell, P. \& Grance, T.  
+\emph{The NIST Definition of Cloud Computing}.  
+NIST, 2022.  
+\textit{(Referencia sólida para justificar el enfoque cloud y modular)}.
+
+\bibitem{decisionengines2020}
+Charalambides, M. \emph{Rule-Based Decision Engines for Public Sector Automation}.  
+IEEE SmartGov Conference, 2020.  
+\textit{(Soporte académico para motores de decisión y reglas automatizadas)}.
+
+\bibitem{govtech2023}
+OECD.  
+\emph{Government at a Glance: Digital Government and GovTech Adoption}.  
+OECD Publishing, 2023.  
+\textit{(Contexto global sobre adopción de automatización en gobiernos)}.
+
+\end{thebibliography}
 
 
 \end{document}
