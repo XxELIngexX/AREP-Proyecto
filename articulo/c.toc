@@ -30,8 +30,12 @@
 \contentsline {subsection}{\numberline {8.4}Atributos de Calidad Evaluados}{13}{}%
 \contentsline {subsection}{\numberline {8.5}Comparación con el Proceso Manual Tradicional}{13}{}%
 \contentsline {subsection}{\numberline {8.6}Limitaciones de la Evaluación}{14}{}%
-\contentsline {section}{\numberline {9}Discusión}{14}{}%
-\contentsline {section}{\numberline {10}Resultados}{15}{}%
-\contentsline {section}{\numberline {11}Discusión}{15}{}%
-\contentsline {section}{\numberline {12}Conclusiones}{16}{}%
-\contentsline {section}{\numberline {13}Consideraciones para Implementaciones Reales}{16}{}%
+\contentsline {section}{\numberline {9}Resultados y Evaluación}{14}{}%
+\contentsline {subsection}{\numberline {9.1}Evaluación de precisión}{14}{}%
+\contentsline {subsection}{\numberline {9.2}Detección de fraude}{15}{}%
+\contentsline {subsection}{\numberline {9.3}Rendimiento del sistema}{15}{}%
+\contentsline {subsection}{\numberline {9.4}Comparación con el proceso tradicional}{16}{}%
+\contentsline {subsection}{\numberline {9.5}Análisis de errores}{16}{}%
+\contentsline {section}{\numberline {10}Discusión}{16}{}%
+\contentsline {section}{\numberline {11}Conclusiones}{17}{}%
+\contentsline {section}{\numberline {12}Consideraciones para Implementaciones Reales}{18}{}%

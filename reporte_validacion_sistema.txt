@@ -1,0 +1,34 @@
+======================================================================
+REPORTE DE VALIDACIÓN - SISTEMA RENTA JOVEN
+Fecha: Fri Dec 12 02:44:46 CET 2025
+======================================================================
+
+1. RESUMEN GENERAL
+   - Total registros procesados: 536
+   - Decisiones correctas: 489 (91.23%)
+   - Decisiones incorrectas: 47 (8.77%)
+
+2. MÉTRICAS DE PRECISIÓN
+   - Precisión global: 91.23%
+   - Verdaderos Positivos (TP): 359
+   - Verdaderos Negativos (TN): 130
+   - Falsos Positivos (FP): 25
+   - Falsos Negativos (FN): 22
+
+3. DETECCIÓN DE FRAUDES
+   - Total fraudes en dataset: 83
+   - Fraudes detectados: 58 (69.88%)
+   - Fraudes no detectados: 25 (30.12%)
+
+4. RENDIMIENTO
+   - Tiempo promedio: 1334.29 ms
+   - Tiempo mínimo: 872 ms
+   - Tiempo máximo: 129487 ms
+
+5. ANÁLISIS DE ERRORES
+   Falsos Positivos (25 casos):
+      - FRAUDE_REAL: 25
+
+   Falsos Negativos (22 casos):
+
+======================================================================

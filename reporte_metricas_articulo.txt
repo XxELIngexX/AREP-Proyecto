@@ -1,0 +1,25 @@
+======================================================================
+REPORTE DE MÉTRICAS - SISTEMA RENTA JOVEN
+======================================================================
+
+1. RESUMEN GENERAL
+   - Total solicitudes: 1000
+   - Aprobadas: 735 (73.50%)
+   - Rechazadas: 265 (26.50%)
+
+2. MÉTRICAS DE RENDIMIENTO
+   - Tiempo promedio: 1619.87 ms (1.620 seg)
+   - Tiempo mínimo: 859 ms
+   - Tiempo máximo: 268406 ms
+
+3. TIEMPOS POR VALIDACIÓN
+   - SISBEN: 108.84 ms
+   - SNIES: 924.88 ms
+   - MEN: 366.43 ms
+
+4. COMPARATIVA
+   - Sistema tradicional: 45 días
+   - Sistema automatizado: 1.620 segundos
+   - Mejora: 100.0000%
+
+======================================================================
